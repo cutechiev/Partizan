@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Главная</title>
+    <link rel="stylesheet" href="http://localhost:3000/css/style.css" />
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <nav class="nav" id="nav"></nav>
+    <main>
+      <div class="container">
+        <header>
+          <div class="header_top">
+            <h6>Информационно-познавательный портал</h6>
+            <h1>ПАРТИЗАНСКОЕ ДВИЖЕНИЕ НА БРЯНЩИНЕ</h1>
+          </div>
+          <div class="header_bottom">
+            <p>Сайт создан студенткой Филькиной О.А.</p>
+            <p>ГБПОУ «Брянский профессионально-педагогический колледж»</p>
+            <br />
+            <p>Брянск, 2023 г.</p>
+          </div>
+        </header>
+        <div class="blocks">
+
+        </div>
+      </div>
+    </main>
+    <footer class="footer"></footer>
+  </body>
+  <script>
+    axios.get("http://localhost:3000/html/UI/menu.html").then((resp) => {
+      const menu = resp.data;
+      document.querySelector("#nav").innerHTML = menu;
+    });
+    axios.get("http://localhost:3000/html/UI/footer.html").then((resp) => {
+      const menu = resp.data;
+      document.querySelector(".footer").innerHTML = menu;
+    });
+    axios.get('http://localhost:3000/blocks').then((resp)=>{
+        const count = resp.data.length;
+        let r = "";
+        for (let i = 0; i < count; i++){
+            r += '<div class="block"></div>'
+        }
+        document.querySelector('.blocks').innerHTML = r;
+        const allBlock = document.querySelectorAll('.block');
+        for (let i = 0; i < count; i++){
+            axios.get('http://localhost:3000/html/block/'+resp.data[i]).then((response)=>{
+                allBlock[i].innerHTML = response.data;
+            })
+        }
+        axios.get('http://localhost:3000/test').then((response)=>{
+          let dt = response.data;
+          let tests = ''
+          dt.forEach(element => {
+            tests += '<li>Тест №1</li>'
+          });
+          const tt = document.querySelector('.test')
+          tt.innerHTML = tests;
+        })  
+    })
+  </script>
+</html>

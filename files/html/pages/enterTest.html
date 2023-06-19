@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="http://localhost:3000/css/style.css" />
+    <title>Тест</title>
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  </head>
+  <body>
+    <nav class="nav" id="nav"></nav>
+    <main>
+        <div class="container">
+            <div id="app">
+                <div v-for="item in test" class="test-item">
+                    <strong>Вопрос № {{item.id}}</strong>
+                    <p style="margin: 10px 0;">{{item.text}}</p>
+                    <ul class="answers" style="font-weight: 700;margin: 20px 0;">
+                        <li>1:{{item.A}}</li>
+                        <li>2:{{item.B}}</li>
+                        <li>3:{{item.C}}</li>
+                    </ul>
+                    <input type="text" placeholder="Ответ" class="user-answer">
+                </div>
+                <button v-on:click="endTest">Завершить тестирование</button>
+                <div class="result" style="font-weight: 700;font-size: 20px;;"></div>
+            </div>
+        </div>
+    </main>
+  </body>
+  <script>
+    axios.get("http://localhost:3000/html/UI/menu.html").then((resp) => {
+      const menu = resp.data;
+      document.querySelector("#nav").innerHTML = menu;
+    });
+    const urlParams = new URLSearchParams(window.location.search);
+    const myParam = urlParams.get("testname");
+  </script>
+  <script>
+    const { createApp } = Vue
+  
+    createApp({
+      data() {
+        return {
+          message: 'Hello Vue!',
+          test:[]
+        }
+      },
+      mounted(){
+        axios.get('http://localhost:3000/tests/'+myParam).then((resp)=>{
+         this.test = resp.data;
+    })
+      },
+      methods:{
+        endTest(){
+            const userAnswer = document.querySelectorAll('.user-answer')
+            let userValue = [];
+            userAnswer.forEach((el)=>{
+                userValue.push(el.value)
+            })
+            const cout = userValue.length;
+            let sum = 0;
+            for (let i = 0; i < cout; i++){
+                if (this.test[i].true == userValue[i]){
+                    sum+=1;
+                }
+            }
+            document.querySelector('.result').innerHTML = 'Количество правильных ответов : ' + sum;
+        }
+      }
+    }).mount('#app')
+  </script>
+</html>

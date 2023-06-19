@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://localhost:3000/css/style.css">
+    <title>Тесты</title>
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+</head>
+<body>
+    <nav class="nav" id="nav"></nav>
+    <main>
+        <div class="container">
+            <div class="page_title">
+                Тесты
+            </div>
+            <ul class="test"> 
+
+            </ul>
+        </div>
+    </main>
+    <div class="container">
+        <div class="footer_wrapper">
+          <p>
+            Информацинно-познавательный портал. Создано Филькиной Оксаной
+            Александровной.
+          </p>
+          <p>Брянск, 2023 г</p>
+        </div>
+      </div>
+      
+</body>
+<script>
+    axios.get("http://localhost:3000/html/UI/menu.html").then((resp) => {
+     const menu = resp.data;
+     document.querySelector("#nav").innerHTML = menu;
+   });
+
+   axios.get('http://localhost:3000/test').then((resp)=>{
+    const data = resp.data;
+    let tt = ''
+    data.forEach(element => {
+        tt+='<li><a class="test-link, link" href="/html/pages/enterTest.html?testname='+element+'">Тест №1</a></li>'
+    });
+    const test = document.querySelector('.test')
+    test.innerHTML = tt;
+   })
+</script>
+</html>
